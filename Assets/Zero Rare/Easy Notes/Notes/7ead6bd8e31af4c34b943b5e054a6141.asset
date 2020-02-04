@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: -1
   newId: 7ead6bd8e31af4c34b943b5e054a6141
-  order: -1
+  order: 3
   note: 
   tags: 
   color: {r: 1, g: 1, b: 1, a: 1}

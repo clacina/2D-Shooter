@@ -66,7 +66,14 @@ public class Laser : MonoBehaviour
             }
         }
 
-        Logger.Log(Channel.Laser, "Destroy Laser " + this.GetInstanceID());
-        Destroy(gameObject);
+        if (other.tag == "Player" && _isPlayerLaser) // ignore hit
+        {
+            Logger.Log(Channel.Laser, "Hit by " + other.tag);
+        }
+        else
+        {
+            Logger.Log(Channel.Laser, "Destroy Laser " + this.GetInstanceID());
+            Destroy(gameObject);
+        }
     }
 }

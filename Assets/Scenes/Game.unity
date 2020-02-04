@@ -284,7 +284,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 296421409}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.05, y: -1.31, z: 0}
+  m_LocalPosition: {x: 0, y: -1.31, z: 0}
   m_LocalScale: {x: 0.2611098, y: 0.303849, z: 0.6678}
   m_Children: []
   m_Father: {fileID: 1285001762}
@@ -423,6 +423,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639567589489270, guid: c3741d0e86df04d1fb791aa69f9cff7b,
+        type: 3}
+      propertyPath: _rotationSpeed
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3741d0e86df04d1fb791aa69f9cff7b, type: 3}
@@ -1013,7 +1018,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 867075346}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.066666655, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1285001762}
@@ -1131,15 +1136,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Engine_Damage_Left
       objectReference: {fileID: 0}
-    - target: {fileID: 7789442057875521216, guid: 39e628a0f357844af84d2aa5caa873bf,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7789442057875521217, guid: 39e628a0f357844af84d2aa5caa873bf,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.8
+      value: -0.724
       objectReference: {fileID: 0}
     - target: {fileID: 7789442057875521217, guid: 39e628a0f357844af84d2aa5caa873bf,
         type: 3}
@@ -1368,7 +1368,7 @@ PrefabInstance:
     - target: {fileID: 7789442057875521217, guid: 39e628a0f357844af84d2aa5caa873bf,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.7
+      value: 0.825
       objectReference: {fileID: 0}
     - target: {fileID: 7789442057875521217, guid: 39e628a0f357844af84d2aa5caa873bf,
         type: 3}
@@ -1597,7 +1597,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1491710235
 Transform:
   m_ObjectHideFlags: 0
