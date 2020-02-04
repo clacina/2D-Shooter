@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#pragma warning disable 0649   // Object never assigned, this is because they are assigned in the inspector.  Always Null Check
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -37,9 +38,9 @@ public class GameManager : MonoBehaviour
     void OnGUI()
     {
         Event e = Event.current;
-        if (e.isKey)
+        if (e.isKey && e.keyCode != KeyCode.None)
         {
-            Debug.Log("Detected key code: " + e.keyCode);
+            //Debug.Log("Detected key code: " + e.keyCode);
 
             switch (e.keyCode)
             {

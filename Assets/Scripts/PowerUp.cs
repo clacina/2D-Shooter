@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#pragma warning disable 0649   // Object never assigned, this is because they are assigned in the inspector.  Always Null Check
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ public class PowerUp : MonoBehaviour
         // if bottom of screen, respawn at top with a new random x pos.
         if (transform.position.y < -2.15f)
         {
-            Debug.Log("Destroying powerup due to position");
+            Logger.Log(Channel.AI, "Destroying powerup due to position");
             Destroy(this.gameObject);
         }
 

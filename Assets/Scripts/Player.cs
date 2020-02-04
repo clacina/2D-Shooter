@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#pragma warning disable 0649   // Object never assigned, this is because they are assigned in the inspector.  Always Null Check
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -167,7 +168,7 @@ public class Player : MonoBehaviour
 
     public void ShieldUp()
     {
-        Debug.Log("Shield Up!!");
+        Logger.Log(Channel.Player, "Shield Up!!");
         _useShield = true;
         _shieldVisualizer.SetActive(true);
         StartCoroutine(ShieldCoolDown());
@@ -175,14 +176,14 @@ public class Player : MonoBehaviour
 
     public void AddScore(int iVal)
     {
-        Debug.Log("Taking score from " + _score + " to " + iVal);
+        Logger.Log(Channel.Player, "Taking score from " + _score + " to " + iVal);
         _score += iVal;
         _uiManager.UpdateScore(_score);
     }
 
     public void StartWave()
     {
-        Debug.Log("Player::StartWave");
+        Logger.Log(Channel.Player, "Player::StartWave");
         _spawnManager.StartSpawning();
     }
 
