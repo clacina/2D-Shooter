@@ -47,17 +47,11 @@ public class Player : MonoBehaviour
 
         // Get access to the spawn manager 
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        if(_spawnManager == null)
-        {
-            Debug.Assert(false);
-        }
+        Debug.Assert(_spawnManager);
 
         // Get access to the game manager
         _uiManager = GameObject.Find("UI_Manager").GetComponent<UI_Manager>();
-        if(_uiManager == null)
-        {
-            Debug.Assert(false);
-        }
+        Debug.Assert(_uiManager);
     }
 
     void Update()
@@ -78,9 +72,10 @@ public class Player : MonoBehaviour
 
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
 
+        // Move Us as described by the Axis Inputs
         transform.Translate(direction * _speed * Time.deltaTime);
 
-        // restrict / clamp the Y axis
+        // Restrict / clamp the Y axis - can only go so high on the screen
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, _minYRange, _maxYRange), 0);
 
         // Wrap from side to side if we go out of bounds
@@ -114,18 +109,24 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        _shieldVisualizer.SetActive(false);
+        // Do we have a shield? Just kill it and continue
         if (_useShield)
         {
             _useShield = false;
+            _shieldVisualizer.SetActive(false);
             return;
         }
 
+        // Adjust our lives and update the UI
         _lives--;
+        UpdateLifeIcons();
+    }
+
+    void UpdateLifeIcons() {
         _uiManager.UpdateLives(_lives);
 
-        // add damage
-        if(_lives == 2)
+        // Show Damage depending on lives left
+        if (_lives == 2)
         {
             _damageLeft.SetActive(true);
         }
@@ -138,43 +139,23 @@ public class Player : MonoBehaviour
         {
             // Tell spawn manager to stop spawning
             _spawnManager.PlayerKilled();
+
+            // Destroy our object
             Destroy(this.gameObject);
         }
     }
 
-    public void PowerUp()
+    // Update Functions
+    public void AddLife()
+    {
+        _lives++;
+        UpdateLifeIcons();
+    }
+
+    public void EnableTripleShot()
     {
         _useTripleShot = true;
         StartCoroutine(PowerCoolDown());
-    }
-
-    // Cool Down Routines
-    IEnumerator PowerCoolDown()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(_tripleshotBoostDuration);
-            _useTripleShot = false;
-        }
-    }
-
-    IEnumerator SpeedCoolDown()
-    {
-        while(true)
-        {
-            yield return new WaitForSeconds(_speedBoostDuration);
-            _useSpeedBoost = false;
-            _speed = _defaultSpeed;
-        }
-    }
-
-    IEnumerator ShieldCoolDown()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(_shieldDuration);
-            _useShield = false;
-        }
     }
 
     public void SpeedUp()
@@ -203,5 +184,36 @@ public class Player : MonoBehaviour
     {
         Debug.Log("Player::StartWave");
         _spawnManager.StartSpawning();
+    }
+
+
+    //----------------------------------------------------------------------
+    // Cool Down Routines - turn feature off after 'x' seconds
+    IEnumerator PowerCoolDown()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(_tripleshotBoostDuration);
+            _useTripleShot = false;
+        }
+    }
+
+    IEnumerator SpeedCoolDown()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(_speedBoostDuration);
+            _useSpeedBoost = false;
+            _speed = _defaultSpeed;
+        }
+    }
+
+    IEnumerator ShieldCoolDown()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(_shieldDuration);
+            _useShield = false;
+        }
     }
 }

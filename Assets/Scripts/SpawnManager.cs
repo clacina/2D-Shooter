@@ -68,4 +68,19 @@ public class SpawnManager : MonoBehaviour
             StartCoroutine(SpawnPowerUp());
         }
     }
+
+    public void AdhocSpawnEnemy()
+    {
+        Vector3 startPos = new Vector3(Random.Range(-6f, 6f), 7.0f, 0);
+        // Spawn Enemy 
+        GameObject newEnemy = Instantiate(_enemyPrefab, startPos, Quaternion.identity);
+        // Set its container
+        newEnemy.transform.parent = _enemyContainer.transform;
+
+    }
+
+    public void AdhocSpawnAsteroid()
+    {
+
+    }
 }

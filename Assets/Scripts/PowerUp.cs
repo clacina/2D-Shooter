@@ -47,7 +47,7 @@ public class PowerUp : MonoBehaviour
                 switch(_powerupID)
                 {
                     case 0: // Triple Shot
-                        player.PowerUp();
+                        player.EnableTripleShot();
                         break;
                     case 1: // Speed
                         player.SpeedUp();
