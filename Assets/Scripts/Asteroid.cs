@@ -10,11 +10,6 @@ public class Asteroid : MonoBehaviour
 
     [SerializeField]
     private GameObject _explosionPrefab;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -22,6 +17,7 @@ public class Asteroid : MonoBehaviour
         transform.Rotate(new Vector3(0, 0, 2) *_rotationSpeed * Time.deltaTime);
     }
 
+    // Collision Routines
     private void OnTriggerEnter2D(Collider2D other)
     {
         Logger.Log(Channel.Asteroid, "Hit: " + other.transform.name + " - " + Time.time);
@@ -73,6 +69,7 @@ public class Asteroid : MonoBehaviour
         }
     }
 
+    // Internal Functions
     private void Explode()
     {
         // start the explosion animation
