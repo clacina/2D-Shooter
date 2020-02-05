@@ -38,9 +38,9 @@ public class GameManager : MonoBehaviour
     void OnGUI()
     {
         Event e = Event.current;
-        if (e.isKey && e.keyCode != KeyCode.None)
+        if (e.isKey && e.keyCode != KeyCode.None && e.type == EventType.KeyDown)
         {
-            //Debug.Log("Detected key code: " + e.keyCode);
+            Debug.Log("Detected key code: " + e.keyCode);
 
             switch (e.keyCode)
             {

@@ -21,7 +21,9 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private bool _useTripleShot=false, _useSpeedBoost=false, _useShield=false;
-    private float _speedBoostDuration=5f, _shieldDuration=28f, _tripleshotBoostDuration=5f;
+    private float _speedBoostDuration=5f, _shieldDuration=28f, _tripleshotBoostDuration=15f;
+    private System.DateTime _tripleShotExpiration;
+    private bool _tripleShotInitialized;
 
     [SerializeField]
     private float _minXRange=-7.46f, _maxXRange=6.6f, _minYRange=-1.75f, _maxYRange=2f;
@@ -63,6 +65,14 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
             FireLaser();
+        }
+
+        // check for triple shot time out
+        if (_useTripleShot && System.DateTime.Now > _tripleShotExpiration)
+        {
+            Logger.Log(Channel.Laser, "Expiring Tripleshot " + System.DateTime.Now + " > " + _tripleShotExpiration);
+            _useTripleShot = false;
+            _tripleShotInitialized = false;
         }
     }
 
@@ -155,8 +165,14 @@ public class Player : MonoBehaviour
 
     public void EnableTripleShot()
     {
-        _useTripleShot = true;
-        StartCoroutine(PowerCoolDown());
+        if (!_useTripleShot)
+        {
+            _useTripleShot = true;
+            _tripleShotExpiration = System.DateTime.Now;
+        }
+
+        _tripleShotExpiration = _tripleShotExpiration.Add(new System.TimeSpan(0, 0, 0, (int)_tripleshotBoostDuration));
+        Logger.Log(Channel.Laser, "Extending triple shot to " + _tripleShotExpiration);
     }
 
     public void SpeedUp()
@@ -190,14 +206,14 @@ public class Player : MonoBehaviour
 
     //----------------------------------------------------------------------
     // Cool Down Routines - turn feature off after 'x' seconds
-    IEnumerator PowerCoolDown()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(_tripleshotBoostDuration);
-            _useTripleShot = false;
-        }
-    }
+    //IEnumerator PowerCoolDown()
+    //{
+    //    while (true)
+    //    {
+    //        yield return new WaitForSeconds(_tripleshotBoostDuration);
+    //        _useTripleShot = false;
+    //    }
+    //}
 
     IEnumerator SpeedCoolDown()
     {
