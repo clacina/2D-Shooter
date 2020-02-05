@@ -6,24 +6,27 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float _speed = 7f, _defaultSpeed=7f, _boostSpeed=10f;
+    private float _movementSpeed = 7f, _defaultMovementSpeed=7f, _boostSpeed=10f;
 
     [SerializeField]
     private GameObject _laserPrefabSingle, _laserPrefabTriple;
 
     [SerializeField]
-    private float _fireRate = 0.15f;
-    private float _canFire = 0.0f;
-    private float _firePositionOffset = 0.8f;
+    private float _defaultFireRate=0.05f, _fireBoostRate=0.16f;
+    private float _fireRate;
+    private float _canFire=0.0f;
+    private float _firePositionOffset=0.8f;
 
     [SerializeField]
     private int _lives = 3;
 
     [SerializeField]
-    private bool _useTripleShot=false, _useSpeedBoost=false, _useShield=false;
+    private bool _useTripleShot=false, _speedMode=false;
     private float _speedBoostDuration=5f, _shieldDuration=28f, _tripleshotBoostDuration=15f;
-    private System.DateTime _tripleShotExpiration;
-    private bool _tripleShotInitialized;
+    private System.DateTime _tripleShotExpiration, _speedBoostExpiration;
+
+    [SerializeField]
+    private int _shieldCount = 0;
 
     [SerializeField]
     private float _minXRange=-7.46f, _maxXRange=6.6f, _minYRange=-1.75f, _maxYRange=2f;
@@ -40,6 +43,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        _fireRate = _defaultFireRate;
+
         // Turn off all effects
         _shieldVisualizer.SetActive(false);
         _damageLeft.SetActive(false);
@@ -72,7 +77,13 @@ public class Player : MonoBehaviour
         {
             Logger.Log(Channel.Laser, "Expiring Tripleshot " + System.DateTime.Now + " > " + _tripleShotExpiration);
             _useTripleShot = false;
-            _tripleShotInitialized = false;
+        }
+
+        if (_speedMode && System.DateTime.Now > _speedBoostExpiration)
+        {
+            Logger.Log(Channel.Laser, "Expiring Speed Bost " + System.DateTime.Now + " > " + _speedBoostExpiration);
+            _speedMode = false;
+            _movementSpeed = _defaultMovementSpeed;
         }
     }
 
@@ -84,7 +95,7 @@ public class Player : MonoBehaviour
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
 
         // Move Us as described by the Axis Inputs
-        transform.Translate(direction * _speed * Time.deltaTime);
+        transform.Translate(direction * _movementSpeed * Time.deltaTime);
 
         // Restrict / clamp the Y axis - can only go so high on the screen
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, _minYRange, _maxYRange), 0);
@@ -100,6 +111,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Only called when within fire threshold
     void FireLaser()
     {
         _canFire = Time.time + _fireRate;
@@ -120,11 +132,15 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        // Do we have a shield? Just kill it and continue
-        if (_useShield)
+        if (_shieldCount > 1)
         {
-            _useShield = false;
+            _shieldCount--;
+            return;
+        } else if(_shieldCount == 1)
+        {
+            // kill shield icon - no more shields
             _shieldVisualizer.SetActive(false);
+            _shieldCount--;
             return;
         }
 
@@ -177,17 +193,22 @@ public class Player : MonoBehaviour
 
     public void SpeedUp()
     {
-        _useSpeedBoost = true;
-        _speed = _boostSpeed;
-        StartCoroutine(SpeedCoolDown());
+        if (!_speedMode)
+        {
+            _speedMode = true;
+            _speedBoostExpiration = System.DateTime.Now;
+        }
+
+        _speedBoostExpiration = _speedBoostExpiration.Add(new System.TimeSpan(0, 0, 0, (int)_speedBoostDuration));
+        Logger.Log(Channel.Player, "Extending speed boost to " + _speedBoostExpiration);
+        _movementSpeed = _boostSpeed;
     }
 
     public void ShieldUp()
     {
+        _shieldCount++;
         Logger.Log(Channel.Player, "Shield Up!!");
-        _useShield = true;
         _shieldVisualizer.SetActive(true);
-        StartCoroutine(ShieldCoolDown());
     }
 
     public void AddScore(int iVal)
@@ -201,36 +222,5 @@ public class Player : MonoBehaviour
     {
         Logger.Log(Channel.Player, "Player::StartWave");
         _spawnManager.StartSpawning();
-    }
-
-
-    //----------------------------------------------------------------------
-    // Cool Down Routines - turn feature off after 'x' seconds
-    //IEnumerator PowerCoolDown()
-    //{
-    //    while (true)
-    //    {
-    //        yield return new WaitForSeconds(_tripleshotBoostDuration);
-    //        _useTripleShot = false;
-    //    }
-    //}
-
-    IEnumerator SpeedCoolDown()
-    {
-        while(true)
-        {
-            yield return new WaitForSeconds(_speedBoostDuration);
-            _useSpeedBoost = false;
-            _speed = _defaultSpeed;
-        }
-    }
-
-    IEnumerator ShieldCoolDown()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(_shieldDuration);
-            _useShield = false;
-        }
     }
 }

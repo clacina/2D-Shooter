@@ -77,7 +77,6 @@ public class SpawnManager : MonoBehaviour
         GameObject newEnemy = Instantiate(_enemyPrefab, startPos, Quaternion.identity);
         // Set its container
         newEnemy.transform.parent = _enemyContainer.transform;
-
     }
 
     public void AdhocSpawnAsteroid()

@@ -301,8 +301,8 @@ public class Logger
     private static readonly Dictionary<Channel, string> channelToColour = new Dictionary<Channel, string>
     {
         { Channel.Laser,        "cyan" },
-        { Channel.Player,       "lightblue" },
-        { Channel.Asteroid,     "blue" },
+        { Channel.Player,       "blue" },
+        { Channel.Asteroid,     "orange" },
         { Channel.Enemy,        "green" },
         //{ Channel.Physics,    "yellow" },
         { Channel.UI,           "purple" },

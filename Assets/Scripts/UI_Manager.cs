@@ -33,7 +33,7 @@ public class UI_Manager : MonoBehaviour
         _scoreText.text = "Score: 0";
         _gameOverText.gameObject.SetActive(false);
         _restartText.gameObject.SetActive(false);
-        Debug.Log("Life Sprite: " + _lifesSprites.Length);
+        Logger.Log(Channel.UI, "Life Sprite: " + _lifesSprites.Length);
         if(_lifesSprites.Length > 0)
         {
             UpdateLives(_lifesSprites.Length-1);
@@ -51,7 +51,7 @@ public class UI_Manager : MonoBehaviour
         Debug.Log("Cur Lives is " + cur);
         if(cur > _lifesSprites.Length)
         {
-            Debug.LogError("Invalid index " + cur + " of length: " + _lifesSprites.Length);
+            Logger.Log(Channel.UI, "Invalid index " + cur + " of length: " + _lifesSprites.Length);
             return;
         }
         _LifeImg.sprite = _lifesSprites[cur];
