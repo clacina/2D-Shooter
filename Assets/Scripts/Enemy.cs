@@ -32,7 +32,8 @@ public class Enemy : MonoBehaviour
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
         _deathAnimation = GetComponent<Animator>();
-        Debug.Assert(_player == null || _audioSource == null || _deathAnimation == null);
+        Debug.Assert(_player == null || _audioSource == null || _deathAnimation == null,
+            "Enemy Start Failed: " + _player + "," + _audioSource + "," + _deathAnimation);
     }
 
     // Update is called once per frame

@@ -81,7 +81,7 @@ public class Player : MonoBehaviour
 
         if (_speedMode && System.DateTime.Now > _speedBoostExpiration)
         {
-            Logger.Log(Channel.Laser, "Expiring Speed Bost " + System.DateTime.Now + " > " + _speedBoostExpiration);
+            Logger.Log(Channel.UI, "Expiring Speed Bost " + System.DateTime.Now + " > " + _speedBoostExpiration);
             _speedMode = false;
             _movementSpeed = _defaultMovementSpeed;
         }

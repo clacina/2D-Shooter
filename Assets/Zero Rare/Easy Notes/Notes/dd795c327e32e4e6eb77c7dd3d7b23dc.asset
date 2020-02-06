@@ -15,12 +15,11 @@ MonoBehaviour:
   id: -1
   newId: dd795c327e32e4e6eb77c7dd3d7b23dc
   order: 2
-  note: "\n2D Shooter\n\nBugs:\n\nxx Hit asteroid to start\nxx Fix enemy fire\n* Fix
-    post processing\nxx fix enemy spawn positions\n* Fix layering for all objects\n*
-    Don\u2019t let enemy kill enemy\nxx Don\u2019t forget menu screen\n* Add logo
-    for Thinking AR\nxx Fix Scoring\nxx Make Player Explode\nxxFix weird issue with
-    Enemy reappearing\n\nStop laser from going through asteroid\nStop laser from going
-    through enemy"
+  note: "\n2D Shooter\n\nBugs:\n\n* Fix post processing\n* Fix layering for all objects\n*
+    Add logo for Thinking AR\n\n\nxx Don\u2019t let enemy kill enemy\nxx Fix Scoring\nxx
+    Make Player Explode\nxxFix weird issue with Enemy reappearing\nxx fix enemy spawn
+    positions\nxx Stop laser from going through asteroid\nxx Stop laser from going
+    through enemy\nxx Hit asteroid to start\nxx Fix enemy fire\n"
   tags: 
   color: {r: 1, g: 1, b: 1, a: 1}
   show: 1

@@ -17,12 +17,14 @@ MonoBehaviour:
   order: 1
   note: "Extras (To Do):\n* Spawn asteroids\n    * Different speeds / random x path\n
     \   * Different score value from enemys\n    * Change size dynamically and have
-    higher value base on size.\n* Fix bug with multiple ramp ups\n    * While in triple
-    shot, get another triple shot\n        * Should extend original triple shot, instead
-    cancels it\n* Use left and right player animation\n* Side menu\n    * x shields\n
-    \   * x laser\n    * x speed\n* Add an is dying mode for the enemies - so they
-    don\u2019t stop so abruptly.\n* Cheat Codes\n* * Tripple Shot\n* * Shield\n* *
-    Speed\n* * Add Enemy\n* * Add Life\n* * Add Asteroid"
+    higher value base on size.\x03\x03\x03\n    * Out of bounds behavour?  Die or
+    wrap?\x03    \n    * Spawn more frequently over time\n\nxx Fix bug with multiple
+    ramp ups\n    * While in triple shot, get another triple shot\n        * Should
+    extend original triple shot, instead cancels it\n\n* Use left and right player
+    animation\n\n* Side menu\n    * x shields\n    * x laser\n    * x speed\n* Add
+    an is dying mode for the enemies - so they don\u2019t stop so abruptly.\n\n* Cheat
+    Codes\nxx Tripple Shot\nxx Shield\nxx Speed\nxx Add Enemy\nxx Add Life\n\n* *
+    Add Asteroid\x03\n* Add running clock to match debug output\n"
   tags: 
   color: {r: 1, g: 1, b: 1, a: 1}
   show: 1

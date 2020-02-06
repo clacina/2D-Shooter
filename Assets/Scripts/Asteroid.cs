@@ -11,10 +11,30 @@ public class Asteroid : MonoBehaviour
     [SerializeField]
     private GameObject _explosionPrefab;
 
+    [SerializeField]
+    public bool isSpawned = true;
+
+    private float _xMovementSpeed, _yMovementSpeed;
+
+    private void Start()
+    {
+        // Define the movement speed for this object
+        _xMovementSpeed = Random.Range(-1f, 1f);
+        _yMovementSpeed = Random.Range(0f, -1f);
+        Logger.Log(Channel.Asteroid, "Speed of " + _xMovementSpeed + " and " + _yMovementSpeed);
+    }
+
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(new Vector3(0, 0, 2) *_rotationSpeed * Time.deltaTime);
+        if (isSpawned)
+        {   // x (Left to Right), Y (Up / Down), ?
+            transform.Translate(new Vector3(_xMovementSpeed, _yMovementSpeed, 0) * Time.deltaTime);
+        }
+        else
+        {   // Rotation only
+            transform.Rotate(new Vector3(0, 0, 2) * _rotationSpeed * Time.deltaTime);
+        }
     }
 
     // Collision Routines
@@ -41,33 +61,28 @@ public class Asteroid : MonoBehaviour
             Explode();
             Logger.Log(Channel.Asteroid, "Calling start wave");
             Player player = GameObject.Find("Player").GetComponent<Player>();
-            if (player != null)
-            {
-                player.StartWave();
-            } else
-            {
-                Debug.Log("--Player is null");
-            }
+            Debug.Assert(player);
+            player.StartWave();
         }
     }
 
-    void OnTriggerStay2D(Collider2D collider)
-    {
-        Logger.Log(Channel.Asteroid, "Trigger stay: " + Time.time);
-    }
+    //void OnTriggerStay2D(Collider2D collider)
+    //{
+    //    Logger.Log(Channel.Asteroid, "Trigger stay: " + Time.time);
+    //}
 
-    void OnTriggerExit2D(Collider2D other)
-    {
-        Logger.Log(Channel.Asteroid, "exit trigger: " + Time.time);
-    }
+    //void OnTriggerExit2D(Collider2D other)
+    //{
+    //    Logger.Log(Channel.Asteroid, "exit trigger: " + Time.time);
+    //}
 
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Enemy")
-        {
-            Logger.Log(Channel.Asteroid, "Got Enter 2d " + Time.time);
-        }
-    }
+    //void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.tag == "Enemy")
+    //    {
+    //        Logger.Log(Channel.Asteroid, "Got Enter 2d " + Time.time);
+    //    }
+    //}
 
     // Internal Functions
     private void Explode()
@@ -83,5 +98,10 @@ public class Asteroid : MonoBehaviour
         // Destroy the animation in 2.5 seconds.
         Destroy(explosion, 2.5f);
         Logger.Log(Channel.Asteroid, "Leaving Explode " + Time.time);
+    }
+
+    public void Spawn()
+    {
+        isSpawned = true;
     }
 }
