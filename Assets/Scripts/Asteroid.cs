@@ -3,8 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+enum AsteroidClass
+{
+    AC_LARGE,
+    AC_MEDIUM,
+    AC_SMALL
+};
+
 public class Asteroid : MonoBehaviour
 {
+    // Define scale of different asteroids
+    public const float AC_LARGE_SIZE = 1.0f;
+    public const float AC_MEDIUM_SIZE = .4F;
+    public const float AC_SMALL_SIZE = .2f;
+
+    [SerializeField]
+    AsteroidClass _asteroidClass = AsteroidClass.AC_LARGE;
+
     [SerializeField]
     private float _rotationSpeed = 7.0f;
 
@@ -32,8 +47,16 @@ public class Asteroid : MonoBehaviour
             transform.Translate(new Vector3(_xMovementSpeed, _yMovementSpeed, 0) * Time.deltaTime);
         }
         else
-        {   // Rotation only
+        {
             transform.Rotate(new Vector3(0, 0, 2) * _rotationSpeed * Time.deltaTime);
+        }
+
+        // Check for out of field
+        // if bottom of screen, respawn at top.
+        if (transform.position.y < -2.15f || transform.position.x > 8.0f || transform.position.x < -9.0f)
+        {
+            Logger.Log(Channel.Asteroid, "Passed bottom");
+            Destroy(this.gameObject);
         }
     }
 
@@ -66,24 +89,6 @@ public class Asteroid : MonoBehaviour
         }
     }
 
-    //void OnTriggerStay2D(Collider2D collider)
-    //{
-    //    Logger.Log(Channel.Asteroid, "Trigger stay: " + Time.time);
-    //}
-
-    //void OnTriggerExit2D(Collider2D other)
-    //{
-    //    Logger.Log(Channel.Asteroid, "exit trigger: " + Time.time);
-    //}
-
-    //void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    if (collision.gameObject.tag == "Enemy")
-    //    {
-    //        Logger.Log(Channel.Asteroid, "Got Enter 2d " + Time.time);
-    //    }
-    //}
-
     // Internal Functions
     private void Explode()
     {
@@ -100,8 +105,19 @@ public class Asteroid : MonoBehaviour
         Logger.Log(Channel.Asteroid, "Leaving Explode " + Time.time);
     }
 
+    // External Functions
     public void Spawn()
     {
         isSpawned = true;
+        _asteroidClass = (AsteroidClass) Random.RandomRange(0, 3);   // use '3' because rand 'int' not float.
+        Logger.Log(Channel.Asteroid, "Spawning type " + _asteroidClass);
+        if (_asteroidClass != AsteroidClass.AC_LARGE) {  // change scale
+            float scale = AC_MEDIUM_SIZE;
+            if (_asteroidClass == AsteroidClass.AC_SMALL)
+            {
+                scale = AC_SMALL_SIZE;
+            }
+            this.gameObject.transform.localScale = new Vector3(scale, scale, 0);
+        }
     }
 }

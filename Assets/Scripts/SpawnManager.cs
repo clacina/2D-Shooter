@@ -8,8 +8,6 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject[] _powerups;
     [SerializeField]
-    private float _enemySpawnRate = 5.0f;
-    [SerializeField]
     private GameObject _enemyContainer, _enemyPrefab, _asteroidPrefab, _asteroidContainer;
 
     private bool _stopSpawning = true;
@@ -31,12 +29,19 @@ public class SpawnManager : MonoBehaviour
     {
         while (!_stopSpawning)
         {
-            // Spawn Enemy 
-            GameObject newEnemy = Instantiate(_enemyPrefab, CalculateSpawnPosition(), Quaternion.identity);
-            // Set its container
-            newEnemy.transform.parent = _enemyContainer.transform;
+            AdhocSpawnEnemy();
+            float spawnFreq = Random.Range(3f, 7f);
+            yield return new WaitForSeconds(spawnFreq);
+        }
+    }
 
-            yield return new WaitForSeconds(_enemySpawnRate);
+    IEnumerator SpawnAsteroid()
+    {
+        while (!_stopSpawning)
+        {
+            AdhocSpawnAsteroid();
+            float spawnFreq = Random.Range(3f, 7f);
+            yield return new WaitForSeconds(spawnFreq);
         }
     }
 
@@ -46,13 +51,9 @@ public class SpawnManager : MonoBehaviour
         {
             // Spawn Random Power Up
             int randomPowerUp = Random.Range(0, _powerups.Length);
-            //Debug.Log("Spawning powerup of " + randomPowerUp);
-
             Instantiate(_powerups[randomPowerUp], CalculateSpawnPosition(), Quaternion.identity);
 
             float spawnFreq = Random.Range(3f, 7f);
-            //Debug.Log("Next spawn in " + spawnFreq + " seconds");
-
             yield return new WaitForSeconds(spawnFreq);
         }
     }
@@ -65,6 +66,7 @@ public class SpawnManager : MonoBehaviour
             _stopSpawning = false;
             StartCoroutine(SpawnEnemy());
             StartCoroutine(SpawnPowerUp());
+            StartCoroutine(SpawnAsteroid());
         }
     }
 
