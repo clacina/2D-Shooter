@@ -23,8 +23,8 @@ MonoBehaviour:
     extend original triple shot, instead cancels it\n\n* Use left and right player
     animation\n\n* Side menu\n    * x shields\n    * x laser\n    * x speed\n* Add
     an is dying mode for the enemies - so they don\u2019t stop so abruptly.\n\n* Cheat
-    Codes\nxx Tripple Shot\nxx Shield\nxx Speed\nxx Add Enemy\nxx Add Life\n\n* *
-    Add Asteroid\x03\n* Add running clock to match debug output\n"
+    Codes\nxx Tripple Shot\nxx Shield\nxx Speed\nxx Add Enemy\nxx Add Life\n\nxx Add
+    Asteroid\x03\n* Add running clock to match debug output\n"
   tags: 
   color: {r: 1, g: 1, b: 1, a: 1}
   show: 1
