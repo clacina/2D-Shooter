@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1693034297, guid: bb598dd41675c6348bee385a9e8c25bd, type: 3}
+  m_Name: 9725065e3e1ba46eb887647f75770b05
+  m_EditorClassIdentifier: 
+  id: -1
+  newId: 9725065e3e1ba46eb887647f75770b05
+  order: 1
+  note: "Extras (To Do):\n* Spawn asteroids\n    * Different speeds / random x path\n
+    \   * Different score value from enemys\n    * Change size dynamically and have
+    higher value base on size.\x03\x03\x03\n    * Out of bounds behavour?  Die or
+    wrap?\x03    \n    * Spawn more frequently over time\n\nxx Fix bug with multiple
+    ramp ups\n    * While in triple shot, get another triple shot\n        * Should
+    extend original triple shot, instead cancels it\n\n* Use left and right player
+    animation\n\n* Side menu\n    * x shields\n    * x laser\n    * x speed\n* Add
+    an is dying mode for the enemies - so they don\u2019t stop so abruptly.\n\n* Cheat
+    Codes\nxx Tripple Shot\nxx Shield\nxx Speed\nxx Add Enemy\nxx Add Life\n\nxx Add
+    Asteroid\x03\n* Add running clock to match debug output\n"
+  tags: 
+  color: {r: 1, g: 1, b: 1, a: 1}
+  show: 1

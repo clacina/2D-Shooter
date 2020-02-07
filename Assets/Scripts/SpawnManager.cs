@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#pragma warning disable 0649   // Object never assigned, this is because they are assigned in the inspector.  Always Null Check
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,20 +8,20 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject[] _powerups;
     [SerializeField]
-    private float _enemySpawnRate = 5.0f;
-    [SerializeField]
-    private GameObject _enemyContainer, _enemyPrefab;
+    private GameObject _enemyContainer, _enemyPrefab, _asteroidPrefab, _asteroidContainer;
 
     private bool _stopSpawning = true;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
+    private float _spawnMinX = -6.6f, _spawnMaxX = 6.6f, _spawnY = 7.0f;
 
     public void PlayerKilled()
     {
         _stopSpawning = true;
+    }
+
+    Vector3 CalculateSpawnPosition()
+    {
+        // Figure out spawn position
+        return new Vector3(Random.Range(_spawnMinX, _spawnMaxX), _spawnY, 0);
     }
 
     // Spawn Game objects every 5 seconds - Coroutines
@@ -28,14 +29,19 @@ public class SpawnManager : MonoBehaviour
     {
         while (!_stopSpawning)
         {
-            // Figure out spawn position
-            Vector3 startPos = new Vector3(Random.Range(-6f, 6f), 7.0f, 0);
-            // Spawn Enemy 
-            GameObject newEnemy = Instantiate(_enemyPrefab, startPos, Quaternion.identity);
-            // Set its container
-            newEnemy.transform.parent = _enemyContainer.transform;
+            AdhocSpawnEnemy();
+            float spawnFreq = Random.Range(3f, 7f);
+            yield return new WaitForSeconds(spawnFreq);
+        }
+    }
 
-            yield return new WaitForSeconds(_enemySpawnRate);
+    IEnumerator SpawnAsteroid()
+    {
+        while (!_stopSpawning)
+        {
+            AdhocSpawnAsteroid();
+            float spawnFreq = Random.Range(3f, 7f);
+            yield return new WaitForSeconds(spawnFreq);
         }
     }
 
@@ -43,29 +49,52 @@ public class SpawnManager : MonoBehaviour
     {
         while (!_stopSpawning)
         {
-            Vector3 startPos = new Vector3(Random.Range(-6.6f, 6.6f), 7.0f, 0);
-
             // Spawn Random Power Up
             int randomPowerUp = Random.Range(0, _powerups.Length);
-            //Debug.Log("Spawning powerup of " + randomPowerUp);
-
-            Instantiate(_powerups[randomPowerUp], startPos, Quaternion.identity);
+            Instantiate(_powerups[randomPowerUp], CalculateSpawnPosition(), Quaternion.identity);
 
             float spawnFreq = Random.Range(3f, 7f);
-            //Debug.Log("Next spawn in " + spawnFreq + " seconds");
-
             yield return new WaitForSeconds(spawnFreq);
         }
     }
 
+    public bool IsSpawning()
+    {
+        return !_stopSpawning;
+    }
+
     public void StartSpawning()
     {
-        Debug.Log("SpawnManager::StartWave " + _stopSpawning);
         if (_stopSpawning)
         {
+            Debug.Log("SpawnManager::StartWave " + _stopSpawning);
             _stopSpawning = false;
             StartCoroutine(SpawnEnemy());
             StartCoroutine(SpawnPowerUp());
+            StartCoroutine(SpawnAsteroid());
         }
+    }
+
+    // Ad Hoc Spawn Methods
+    public void AdhocSpawnEnemy()
+    {
+        // Spawn Enemy 
+        GameObject newEnemy = Instantiate(_enemyPrefab, CalculateSpawnPosition(), Quaternion.identity);
+        // Set its container
+        newEnemy.transform.parent = _enemyContainer.transform;
+    }
+
+    public void AdhocSpawnAsteroid()
+    {
+        Logger.Log(Channel.UI, "Spawn Asteroid");
+        // Spawn Enemy 
+        GameObject newAsteroid = Instantiate(_asteroidPrefab, CalculateSpawnPosition(), Quaternion.identity);
+
+        // Set its _isSpawned attribute
+        Asteroid asteroid = newAsteroid.GetComponent<Asteroid>();
+        asteroid.Spawn();
+
+        // Set its container
+        newAsteroid.transform.parent = _asteroidContainer.transform;
     }
 }

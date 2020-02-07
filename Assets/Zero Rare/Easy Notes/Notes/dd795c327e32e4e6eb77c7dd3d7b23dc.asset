@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1693034297, guid: bb598dd41675c6348bee385a9e8c25bd, type: 3}
+  m_Name: dd795c327e32e4e6eb77c7dd3d7b23dc
+  m_EditorClassIdentifier: 
+  id: -1
+  newId: dd795c327e32e4e6eb77c7dd3d7b23dc
+  order: 2
+  note: "\n2D Shooter\n\nBugs:\n\n* Fix post processing\n* Fix layering for all objects\n*
+    Add logo for Thinking AR\n\n\nxx Don\u2019t let enemy kill enemy\nxx Fix Scoring\nxx
+    Make Player Explode\nxxFix weird issue with Enemy reappearing\nxx fix enemy spawn
+    positions\nxx Stop laser from going through asteroid\nxx Stop laser from going
+    through enemy\nxx Hit asteroid to start\nxx Fix enemy fire\n"
+  tags: 
+  color: {r: 1, g: 1, b: 1, a: 1}
+  show: 1

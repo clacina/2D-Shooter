@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#pragma warning disable 0649   // Object never assigned, this is because they are assigned in the inspector.  Always Null Check
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,24 +18,22 @@ public class Enemy : MonoBehaviour
     private GameObject _laserPrefabSingle;
 
     [SerializeField]
-    private float _firePositionOffset = 8.0f;
     private float _canFire = -1;
     private bool _isDead = false;
+    private float _laserOffset = -0.9f;
+    private float _nextFireMin = 3.0f, _nextFireMax = 5.0f;
 
     private float _deathSequenceLength = 2.5f;
 
     // Start is called before the first frame update
     void Start()
     {
-        _canFire = Time.time + Random.Range(0.1f, 0.5f);   // fire .1 to .5 seconds after spawn
+        _canFire = Time.time + Random.Range(_nextFireMin, _nextFireMax);
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
         _deathAnimation = GetComponent<Animator>();
-        if (_player == null || _audioSource == null || _deathAnimation == null)
-        {
-            Debug.LogError("Cant find game element");
-        }
-
+        Debug.Assert(_player == null || _audioSource == null || _deathAnimation == null,
+            "Enemy Start Failed: " + _player + "," + _audioSource + "," + _deathAnimation);
     }
 
     // Update is called once per frame
@@ -42,9 +41,9 @@ public class Enemy : MonoBehaviour
     {
         CalculateMovement();
 
-        if (_canFire < Time.time && _isDead == false)
+        if (_canFire < Time.time && !_isDead)
         {
-            GameObject enemyLaser = Instantiate(_laserPrefabSingle, transform.position + new Vector3(0, -.9f, 0), Quaternion.identity);
+            GameObject enemyLaser = Instantiate(_laserPrefabSingle, transform.position + new Vector3(0, _laserOffset, 0), Quaternion.identity);
             enemyLaser.transform.parent = this.transform;
 
             Laser[] enemyLasers = enemyLaser.GetComponentsInChildren<Laser>();
@@ -52,7 +51,7 @@ public class Enemy : MonoBehaviour
             {
                 enemyLasers[i].SetDirection(false);
             }
-            _canFire = Time.time + Random.Range(3.0f, 5.0f);
+            _canFire = Time.time + Random.Range(_nextFireMin, _nextFireMax);
         }
 
     }
@@ -72,27 +71,27 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Hit: " + other.transform.name);
+        //Logger.Log(Channel.Enemy, "Hit: " + other.transform.name);
+        //Logger.Log(Channel.Enemy, "Hit By: " + other.transform.tag);
+
+        // Enemy hits enemy, do nothing
+        if (other.transform.tag == "Enemy" || other.transform.name == "Laser_Left" || other.transform.name == "Laser_Right")
+        {
+            //Logger.Log(Channel.Enemy, "--Bail");
+            return;
+        }
 
         // if other is Player, damage the player, then destroy us
         if (other.transform.tag == "Player")
         {
             // Damage Player
-            Player player = other.transform.GetComponent<Player>();
-            if (player != null)
-            {
-                player.Damage();
-            }
+            _player.Damage();
             EnemyDeath();
         }
-
         // if other is laser, destroy the laser, then destroy us
         else if(other.tag == "Laser")
         {
-            if (_player)
-            {
-                _player.AddScore(_killPoints);
-            }
+            _player.AddScore(_killPoints);
 
             Destroy(other.gameObject);
             EnemyDeath();
@@ -111,8 +110,6 @@ public class Enemy : MonoBehaviour
         _audioSource.Play();  // Start the audio
 
         _deathAnimation.SetTrigger("OnEnemyDeath"); // trigger the exposion animation
-
-        //this.gameObject.SetActive(false); // hide us?
 
         // Wait some period of time before really going away - so we can see the animation
         Destroy(this.gameObject, _deathSequenceLength);

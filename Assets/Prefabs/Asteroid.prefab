@@ -116,9 +116,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.013457388}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.3354279
+  m_Radius: 1.3145167
 --- !u!114 &114639567589489270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,6 +131,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf53aec137f134609b9fbe4f7cc06784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _asteroidClass: 0
   _rotationSpeed: 7
   _explosionPrefab: {fileID: 8198718087131532898, guid: b3b3f268c635d4091bf9af8cd7251d37,
     type: 3}
+  isSpawned: 0

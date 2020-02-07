@@ -1,26 +1,34 @@
-﻿using System.Collections;
+﻿#pragma warning disable 0649   // Object never assigned, this is because they are assigned in the inspector.  Always Null Check
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float _speed = 7f, _defaultSpeed=7f, _boostSpeed=10f;
+    private float _movementSpeed = 4f, _defaultMovementSpeed=4f, _boostSpeed=10f;
 
     [SerializeField]
     private GameObject _laserPrefabSingle, _laserPrefabTriple;
 
     [SerializeField]
-    private float _fireRate = 0.15f;
-    private float _canFire = 0.0f;
-    private float _firePositionOffset = 0.8f;
+    private float _defaultFireRate=0.05f, _fireBoostRate=0.16f;
+    private float _fireRate;
+    private float _canFire=0.0f;
+    private float _firePositionOffset=0.8f;
 
     [SerializeField]
     private int _lives = 3;
+    private const int _maxShields = 10;
+    private const float _maxBoostDuration = 55f;
 
     [SerializeField]
-    private bool _useTripleShot=false, _useSpeedBoost=false, _useShield=false;
-    private float _speedBoostDuration=5f, _shieldDuration=28f, _tripleshotBoostDuration=5f;
+    private bool _useTripleShot=false, _speedMode=false;
+    private float _speedBoostDuration=5f, _shieldDuration=28f, _tripleshotBoostDuration=15f;
+    private System.DateTime _tripleShotExpiration, _speedBoostExpiration;
+
+    [SerializeField]
+    private int _shieldCount = 0;
 
     [SerializeField]
     private float _minXRange=-7.46f, _maxXRange=6.6f, _minYRange=-1.75f, _maxYRange=2f;
@@ -37,6 +45,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        _fireRate = _defaultFireRate;
+
         // Turn off all effects
         _shieldVisualizer.SetActive(false);
         _damageLeft.SetActive(false);
@@ -47,17 +57,11 @@ public class Player : MonoBehaviour
 
         // Get access to the spawn manager 
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        if(_spawnManager == null)
-        {
-            Debug.Assert(false);
-        }
+        Debug.Assert(_spawnManager, "Player cant find Spawn Manager");
 
         // Get access to the game manager
         _uiManager = GameObject.Find("UI_Manager").GetComponent<UI_Manager>();
-        if(_uiManager == null)
-        {
-            Debug.Assert(false);
-        }
+        Debug.Assert(_uiManager, "Player cant find UI Manager");
     }
 
     void Update()
@@ -69,6 +73,25 @@ public class Player : MonoBehaviour
         {
             FireLaser();
         }
+
+        // check for triple shot time out
+        if (_useTripleShot && System.DateTime.Now > _tripleShotExpiration)
+        {
+            //Logger.Log(Channel.Laser, "Expiring Tripleshot " + System.DateTime.Now + " > " + _tripleShotExpiration);
+            _useTripleShot = false;
+        }
+
+        // check for speed boost time out
+        if (_speedMode && System.DateTime.Now > _speedBoostExpiration)
+        {
+            //Logger.Log(Channel.UI, "Expiring Speed Bost " + System.DateTime.Now + " > " + _speedBoostExpiration);
+            _speedMode = false;
+            _movementSpeed = _defaultMovementSpeed;
+        }
+
+        // Update UI Elements
+        _uiManager.TripleShot(_tripleShotExpiration);
+        _uiManager.SpeedBoost(_speedBoostExpiration);
     }
 
     void CalculateMovement()
@@ -78,9 +101,10 @@ public class Player : MonoBehaviour
 
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
 
-        transform.Translate(direction * _speed * Time.deltaTime);
+        // Move Us as described by the Axis Inputs
+        transform.Translate(direction * _movementSpeed * Time.deltaTime);
 
-        // restrict / clamp the Y axis
+        // Restrict / clamp the Y axis - can only go so high on the screen
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, _minYRange, _maxYRange), 0);
 
         // Wrap from side to side if we go out of bounds
@@ -94,6 +118,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Only called when within fire threshold
     void FireLaser()
     {
         _canFire = Time.time + _fireRate;
@@ -114,23 +139,40 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        _shieldVisualizer.SetActive(false);
-        if (_useShield)
+        if (_shieldCount > 1)
         {
-            _useShield = false;
+            _shieldCount--;
+            return;
+        } else if(_shieldCount == 1)
+        {
+            // kill shield icon - no more shields
+            _shieldVisualizer.SetActive(false);
+            _shieldCount--;
             return;
         }
 
+        // Adjust our lives and update the UI
         _lives--;
+        UpdateLifeIcons();
+    }
+
+    void UpdateLifeIcons() {
         _uiManager.UpdateLives(_lives);
 
-        // add damage
-        if(_lives == 2)
+        // Show Damage depending on lives left
+        if (_lives > 2)
         {
-            _damageLeft.SetActive(true);
+            _damageLeft.SetActive(false);
+            _damageRight.SetActive(false);
+        }
+        if (_lives == 2)
+        {
+            _damageLeft.SetActive(false);
+            _damageRight.SetActive(true);
         }
         if(_lives == 1)
         {
+            _damageLeft.SetActive(true);
             _damageRight.SetActive(true);
         }
 
@@ -138,70 +180,84 @@ public class Player : MonoBehaviour
         {
             // Tell spawn manager to stop spawning
             _spawnManager.PlayerKilled();
+
+            // Destroy our object
             Destroy(this.gameObject);
         }
     }
 
-    public void PowerUp()
+    // Update Functions
+    public void AddLife()
     {
-        _useTripleShot = true;
-        StartCoroutine(PowerCoolDown());
+        _lives++;
+        UpdateLifeIcons();
     }
 
-    // Cool Down Routines
-    IEnumerator PowerCoolDown()
+    public void EnableTripleShot()
     {
-        while (true)
+        if (!_useTripleShot)
         {
-            yield return new WaitForSeconds(_tripleshotBoostDuration);
-            _useTripleShot = false;
+            _useTripleShot = true;
+            _tripleShotExpiration = System.DateTime.Now;
         }
-    }
 
-    IEnumerator SpeedCoolDown()
-    {
-        while(true)
+        _tripleShotExpiration = _tripleShotExpiration.Add(new System.TimeSpan(0, 0, 0, (int)_tripleshotBoostDuration));
+        if (_tripleShotExpiration > System.DateTime.Now + System.TimeSpan.FromSeconds(_maxBoostDuration))
         {
-            yield return new WaitForSeconds(_speedBoostDuration);
-            _useSpeedBoost = false;
-            _speed = _defaultSpeed;
+            // Max out at 55 seconds
+            _tripleShotExpiration = System.DateTime.Now + System.TimeSpan.FromSeconds(_maxBoostDuration);
         }
-    }
-
-    IEnumerator ShieldCoolDown()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(_shieldDuration);
-            _useShield = false;
-        }
+        
+        _uiManager.TripleShot(_tripleShotExpiration);
+        //Logger.Log(Channel.Laser, "Extending triple shot to " + _tripleShotExpiration);
     }
 
     public void SpeedUp()
     {
-        _useSpeedBoost = true;
-        _speed = _boostSpeed;
-        StartCoroutine(SpeedCoolDown());
+        if (!_speedMode)
+        {
+            _speedMode = true;
+            _speedBoostExpiration = System.DateTime.Now;
+        }
+
+        _speedBoostExpiration = _speedBoostExpiration.Add(new System.TimeSpan(0, 0, 0, (int)_speedBoostDuration));
+        if(_speedBoostExpiration > System.DateTime.Now+System.TimeSpan.FromSeconds(_maxBoostDuration))
+        {
+            // Max out at 55 seconds
+            _speedBoostExpiration = System.DateTime.Now + System.TimeSpan.FromSeconds(_maxBoostDuration);
+        }
+        _uiManager.SpeedBoost(_speedBoostExpiration);
+        //Logger.Log(Channel.Player, "Extending speed boost to " + _speedBoostExpiration);
+        _movementSpeed = _boostSpeed;
     }
 
     public void ShieldUp()
     {
-        Debug.Log("Shield Up!!");
-        _useShield = true;
+        if (_shieldCount < _maxShields)  // max shields
+        {
+            _shieldCount++;
+        }
+        //Logger.Log(Channel.Player, "Shield Up!!");
         _shieldVisualizer.SetActive(true);
-        StartCoroutine(ShieldCoolDown());
+        _uiManager.Shields(_shieldCount);
     }
 
     public void AddScore(int iVal)
     {
-        Debug.Log("Taking score from " + _score + " to " + iVal);
+        //Logger.Log(Channel.Player, "Taking score from " + _score + " to " + iVal);
         _score += iVal;
         _uiManager.UpdateScore(_score);
     }
 
-    public void StartWave()
+    public void StartWave(int iVal)
     {
-        Debug.Log("Player::StartWave");
-        _spawnManager.StartSpawning();
+        _score += iVal;
+        _uiManager.UpdateScore(_score);
+
+        if (!_spawnManager.IsSpawning())
+        {
+            Logger.Log(Channel.Player, "Player::StartWave");
+            _spawnManager.StartSpawning();
+        }
     }
 }
