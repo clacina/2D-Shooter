@@ -58,11 +58,16 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
+    public bool IsSpawning()
+    {
+        return !_stopSpawning;
+    }
+
     public void StartSpawning()
     {
-        Debug.Log("SpawnManager::StartWave " + _stopSpawning);
         if (_stopSpawning)
         {
+            Debug.Log("SpawnManager::StartWave " + _stopSpawning);
             _stopSpawning = false;
             StartCoroutine(SpawnEnemy());
             StartCoroutine(SpawnPowerUp());

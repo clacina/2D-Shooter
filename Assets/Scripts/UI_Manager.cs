@@ -35,7 +35,7 @@ public class UI_Manager : MonoBehaviour
         _gameOverText.gameObject.SetActive(false);
         _restartText.gameObject.SetActive(false);
 
-        Logger.Log(Channel.UI, "Life Sprite: " + _lifesSprites.Length);
+        //Logger.Log(Channel.UI, "Life Sprite: " + _lifesSprites.Length);
         if(_lifesSprites.Length > 0)
         {
             UpdateLives(_lifesSprites.Length-1);
@@ -105,6 +105,20 @@ public class UI_Manager : MonoBehaviour
         } else
         {
             _tripleText.gameObject.SetActive(false);
+        }
+    }
+
+    internal void SpeedBoost(DateTime speedBoostExpiration)
+    {
+        System.TimeSpan a = speedBoostExpiration - System.DateTime.Now;
+        if (a > System.TimeSpan.Zero)
+        {
+            _speedText.gameObject.SetActive(true);
+            _speedText.text = "Speed Boost - " + a.ToString("%s");
+        }
+        else
+        {
+            _speedText.gameObject.SetActive(false);
         }
     }
 }

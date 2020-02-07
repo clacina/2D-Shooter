@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float _movementSpeed = 7f, _defaultMovementSpeed=7f, _boostSpeed=10f;
+    private float _movementSpeed = 4f, _defaultMovementSpeed=4f, _boostSpeed=10f;
 
     [SerializeField]
     private GameObject _laserPrefabSingle, _laserPrefabTriple;
@@ -19,6 +19,8 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private int _lives = 3;
+    private const int _maxShields = 10;
+    private const float _maxBoostDuration = 55f;
 
     [SerializeField]
     private bool _useTripleShot=false, _speedMode=false;
@@ -55,11 +57,11 @@ public class Player : MonoBehaviour
 
         // Get access to the spawn manager 
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        Debug.Assert(_spawnManager);
+        Debug.Assert(_spawnManager, "Player cant find Spawn Manager");
 
         // Get access to the game manager
         _uiManager = GameObject.Find("UI_Manager").GetComponent<UI_Manager>();
-        Debug.Assert(_uiManager);
+        Debug.Assert(_uiManager, "Player cant find UI Manager");
     }
 
     void Update()
@@ -75,18 +77,21 @@ public class Player : MonoBehaviour
         // check for triple shot time out
         if (_useTripleShot && System.DateTime.Now > _tripleShotExpiration)
         {
-            Logger.Log(Channel.Laser, "Expiring Tripleshot " + System.DateTime.Now + " > " + _tripleShotExpiration);
+            //Logger.Log(Channel.Laser, "Expiring Tripleshot " + System.DateTime.Now + " > " + _tripleShotExpiration);
             _useTripleShot = false;
         }
 
+        // check for speed boost time out
         if (_speedMode && System.DateTime.Now > _speedBoostExpiration)
         {
-            Logger.Log(Channel.UI, "Expiring Speed Bost " + System.DateTime.Now + " > " + _speedBoostExpiration);
+            //Logger.Log(Channel.UI, "Expiring Speed Bost " + System.DateTime.Now + " > " + _speedBoostExpiration);
             _speedMode = false;
             _movementSpeed = _defaultMovementSpeed;
         }
 
+        // Update UI Elements
         _uiManager.TripleShot(_tripleShotExpiration);
+        _uiManager.SpeedBoost(_speedBoostExpiration);
     }
 
     void CalculateMovement()
@@ -155,12 +160,19 @@ public class Player : MonoBehaviour
         _uiManager.UpdateLives(_lives);
 
         // Show Damage depending on lives left
+        if (_lives > 2)
+        {
+            _damageLeft.SetActive(false);
+            _damageRight.SetActive(false);
+        }
         if (_lives == 2)
         {
-            _damageLeft.SetActive(true);
+            _damageLeft.SetActive(false);
+            _damageRight.SetActive(true);
         }
         if(_lives == 1)
         {
+            _damageLeft.SetActive(true);
             _damageRight.SetActive(true);
         }
 
@@ -190,8 +202,14 @@ public class Player : MonoBehaviour
         }
 
         _tripleShotExpiration = _tripleShotExpiration.Add(new System.TimeSpan(0, 0, 0, (int)_tripleshotBoostDuration));
+        if (_tripleShotExpiration > System.DateTime.Now + System.TimeSpan.FromSeconds(_maxBoostDuration))
+        {
+            // Max out at 55 seconds
+            _tripleShotExpiration = System.DateTime.Now + System.TimeSpan.FromSeconds(_maxBoostDuration);
+        }
+        
         _uiManager.TripleShot(_tripleShotExpiration);
-        Logger.Log(Channel.Laser, "Extending triple shot to " + _tripleShotExpiration);
+        //Logger.Log(Channel.Laser, "Extending triple shot to " + _tripleShotExpiration);
     }
 
     public void SpeedUp()
@@ -203,28 +221,43 @@ public class Player : MonoBehaviour
         }
 
         _speedBoostExpiration = _speedBoostExpiration.Add(new System.TimeSpan(0, 0, 0, (int)_speedBoostDuration));
-        Logger.Log(Channel.Player, "Extending speed boost to " + _speedBoostExpiration);
+        if(_speedBoostExpiration > System.DateTime.Now+System.TimeSpan.FromSeconds(_maxBoostDuration))
+        {
+            // Max out at 55 seconds
+            _speedBoostExpiration = System.DateTime.Now + System.TimeSpan.FromSeconds(_maxBoostDuration);
+        }
+        _uiManager.SpeedBoost(_speedBoostExpiration);
+        //Logger.Log(Channel.Player, "Extending speed boost to " + _speedBoostExpiration);
         _movementSpeed = _boostSpeed;
     }
 
     public void ShieldUp()
     {
-        _shieldCount++;
-        Logger.Log(Channel.Player, "Shield Up!!");
+        if (_shieldCount < _maxShields)  // max shields
+        {
+            _shieldCount++;
+        }
+        //Logger.Log(Channel.Player, "Shield Up!!");
         _shieldVisualizer.SetActive(true);
         _uiManager.Shields(_shieldCount);
     }
 
     public void AddScore(int iVal)
     {
-        Logger.Log(Channel.Player, "Taking score from " + _score + " to " + iVal);
+        //Logger.Log(Channel.Player, "Taking score from " + _score + " to " + iVal);
         _score += iVal;
         _uiManager.UpdateScore(_score);
     }
 
-    public void StartWave()
+    public void StartWave(int iVal)
     {
-        Logger.Log(Channel.Player, "Player::StartWave");
-        _spawnManager.StartSpawning();
+        _score += iVal;
+        _uiManager.UpdateScore(_score);
+
+        if (!_spawnManager.IsSpawning())
+        {
+            Logger.Log(Channel.Player, "Player::StartWave");
+            _spawnManager.StartSpawning();
+        }
     }
 }

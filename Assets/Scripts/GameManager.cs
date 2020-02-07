@@ -28,11 +28,10 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
-        Debug.Assert(_player);
+        Debug.Assert(_player, "GameManager cannot get handle to Player Object");
 
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        Debug.Assert(_spawnManager);
-
+        Debug.Assert(_spawnManager, "GameManager cannot get handle to Spawn Manager");
     }
 
     void OnGUI()
@@ -40,7 +39,7 @@ public class GameManager : MonoBehaviour
         Event e = Event.current;
         if (e.isKey && e.keyCode != KeyCode.None && e.type == EventType.KeyDown)
         {
-            Debug.Log("Detected key code: " + e.keyCode);
+            //Logger.Log(Channel.AI, "Detected key code: " + e.keyCode);
 
             switch (e.keyCode)
             {

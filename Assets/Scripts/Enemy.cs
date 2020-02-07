@@ -71,13 +71,13 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Logger.Log(Channel.Enemy, "Hit: " + other.transform.name);
-        Logger.Log(Channel.Enemy, "Hit By: " + other.transform.tag);
+        //Logger.Log(Channel.Enemy, "Hit: " + other.transform.name);
+        //Logger.Log(Channel.Enemy, "Hit By: " + other.transform.tag);
 
         // Enemy hits enemy, do nothing
         if (other.transform.tag == "Enemy" || other.transform.name == "Laser_Left" || other.transform.name == "Laser_Right")
         {
-            Logger.Log(Channel.Enemy, "--Bail");
+            //Logger.Log(Channel.Enemy, "--Bail");
             return;
         }
 

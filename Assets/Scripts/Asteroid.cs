@@ -31,12 +31,15 @@ public class Asteroid : MonoBehaviour
 
     private float _xMovementSpeed, _yMovementSpeed;
 
+    [SerializeField]
+    private int _Value = 10;
+
     private void Start()
     {
         // Define the movement speed for this object
         _xMovementSpeed = Random.Range(-1f, 1f);
         _yMovementSpeed = Random.Range(0f, -1f);
-        Logger.Log(Channel.Asteroid, "Speed of " + _xMovementSpeed + " and " + _yMovementSpeed);
+        //Logger.Log(Channel.Asteroid, "Speed of " + _xMovementSpeed + " and " + _yMovementSpeed);
     }
 
     // Update is called once per frame
@@ -55,7 +58,7 @@ public class Asteroid : MonoBehaviour
         // if bottom of screen, respawn at top.
         if (transform.position.y < -2.15f || transform.position.x > 8.0f || transform.position.x < -9.0f)
         {
-            Logger.Log(Channel.Asteroid, "Passed bottom");
+            //Logger.Log(Channel.Asteroid, "Passed bottom");
             Destroy(this.gameObject);
         }
     }
@@ -63,7 +66,7 @@ public class Asteroid : MonoBehaviour
     // Collision Routines
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Logger.Log(Channel.Asteroid, "Hit: " + other.transform.name + " - " + Time.time);
+        //Logger.Log(Channel.Asteroid, "Hit: " + other.transform.name + " - " + Time.time);
 
         // if other is Player, damage the player, then destroy us
         if (other.transform.tag == "Player")
@@ -72,6 +75,7 @@ public class Asteroid : MonoBehaviour
 
             // Damage Player
             Player player = other.transform.GetComponent<Player>();
+            Debug.Assert(player, "Asteroid can't find Player");
             if (player != null)
             {
                 player.Damage();
@@ -85,7 +89,7 @@ public class Asteroid : MonoBehaviour
             Logger.Log(Channel.Asteroid, "Calling start wave");
             Player player = GameObject.Find("Player").GetComponent<Player>();
             Debug.Assert(player);
-            player.StartWave();
+            player.StartWave(_Value);
         }
     }
 
@@ -93,29 +97,31 @@ public class Asteroid : MonoBehaviour
     private void Explode()
     {
         // start the explosion animation
-        Logger.Log(Channel.Asteroid, "Launch explosion " + Time.time);
+        //Logger.Log(Channel.Asteroid, "Launch explosion " + Time.time);
         GameObject explosion = Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
 
         // Destroy us (Asteroid)
-        Logger.Log(Channel.Asteroid, "Destroy asteroid " + Time.time);
+        //Logger.Log(Channel.Asteroid, "Destroy asteroid " + Time.time);
         Destroy(this.gameObject, .45f);
 
         // Destroy the animation in 2.5 seconds.
         Destroy(explosion, 2.5f);
-        Logger.Log(Channel.Asteroid, "Leaving Explode " + Time.time);
+        //Logger.Log(Channel.Asteroid, "Leaving Explode " + Time.time);
     }
 
     // External Functions
     public void Spawn()
     {
         isSpawned = true;
-        _asteroidClass = (AsteroidClass) Random.RandomRange(0, 3);   // use '3' because rand 'int' not float.
-        Logger.Log(Channel.Asteroid, "Spawning type " + _asteroidClass);
+        _asteroidClass = (AsteroidClass) Random.Range(0, 3);   // use '3' because rand 'int' not float.
+        //Logger.Log(Channel.Asteroid, "Spawning type " + _asteroidClass);
         if (_asteroidClass != AsteroidClass.AC_LARGE) {  // change scale
             float scale = AC_MEDIUM_SIZE;
+            _Value = 20;
             if (_asteroidClass == AsteroidClass.AC_SMALL)
             {
                 scale = AC_SMALL_SIZE;
+                _Value = 40;                     
             }
             this.gameObject.transform.localScale = new Vector3(scale, scale, 0);
         }

@@ -292,8 +292,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 745.6398, y: 11.199982}
-  m_SizeDelta: {x: 103.72, y: 17.01}
+  m_AnchoredPosition: {x: 730.35, y: 11.199982}
+  m_SizeDelta: {x: 134.31, y: 17.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &239403516
 MonoBehaviour:
@@ -1711,8 +1711,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 676398ead1656462482a3ca27ad46ac6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movementSpeed: 7
-  _defaultMovementSpeed: 7
+  _movementSpeed: 4
+  _defaultMovementSpeed: 4
   _boostSpeed: 10
   _laserPrefabSingle: {fileID: 7813508608774870523, guid: 573ac843059a14b30846090f6be81320,
     type: 3}

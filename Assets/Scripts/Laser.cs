@@ -26,7 +26,7 @@ public class Laser : MonoBehaviour
                 {
                     Destroy(transform.parent.gameObject);
                 }
-                Logger.Log(Channel.Laser, "Destroy Laser from position > laserRange");
+                //Logger.Log(Channel.Laser, "Destroy Laser from position > laserRange");
                 Destroy(this.gameObject);
             }
         } else
@@ -39,7 +39,7 @@ public class Laser : MonoBehaviour
                 {
                     Destroy(transform.parent.gameObject);
                 }
-                Logger.Log(Channel.Laser, "Destroy Laser < 2.0fy");
+                //Logger.Log(Channel.Laser, "Destroy Laser < 2.0fy");
                 Destroy(this.gameObject);
             }
         }
@@ -56,7 +56,7 @@ public class Laser : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        Logger.Log(Channel.Laser, "Laser Hit " + other.tag);
+        //Logger.Log(Channel.Laser, "Laser Hit " + other.tag);
 
 
         // is player
@@ -87,7 +87,7 @@ public class Laser : MonoBehaviour
                 {
                     player.Damage();
                 }
-                Logger.Log(Channel.Laser, "Destroy Laser(a) " + this.GetInstanceID());
+                //Logger.Log(Channel.Laser, "Destroy Laser(a) " + this.GetInstanceID());
                 Destroy(gameObject);
             }
             // Else, player hit player so ignore
@@ -98,12 +98,12 @@ public class Laser : MonoBehaviour
             {
                 // handled by Enemy::OnTriggerEnter2D
                 // doesn't know about player laser vs enemy laser
-                Logger.Log(Channel.Laser, "Enemy hits Enemy!");
+                //Logger.Log(Channel.Laser, "Enemy hits Enemy!");
             }
         }
         else  // hit something besides Player or Enemy so destroy laser
         {
-            Logger.Log(Channel.Laser, "Destroy Laser(b) " + this.GetInstanceID());
+            //Logger.Log(Channel.Laser, "Destroy Laser(b) " + this.GetInstanceID());
             Destroy(gameObject);
         }
     }
