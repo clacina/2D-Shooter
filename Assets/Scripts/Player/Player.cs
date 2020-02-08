@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public partial class Player : MonoBehaviour
 {
     // Player movement speed and speed boost ramp up
     [SerializeField]
@@ -57,10 +57,9 @@ public class Player : MonoBehaviour
     private int _lastMovement=0;  // -1 (left), 0, 1 (right)
     private Vector3 _lastPosition;
     private bool _isAnimLeft=false, _isAnimRight = false;
+    private float _lastHorizontalPostion = 0f;
 
-
-    private Animator _deathAnimation;
-    private float _deathSequenceLength = 2.5f;
+    private float _animatorSequenceLength = 2.5f;
 
 
     void Start()
@@ -85,8 +84,6 @@ public class Player : MonoBehaviour
 
         _anim = gameObject.GetComponent<Animator>();
         Debug.Assert(_anim, "Player cant find animation manaager");
-
-        _deathAnimation = GetComponent<Animator>();
 
         _lastPosition = transform.position;
         _lastMovement = 0;
@@ -129,13 +126,11 @@ public class Player : MonoBehaviour
         if(horizontalInput == 0.0f && verticalInput == 0.0f)
         {
             // Stop any animation
-            if(_isAnimLeft)
+            if(_isAnimLeft || _isAnimRight)
             {
-
-            } else if(_isAnimRight)
-            {
-
+                _anim.StopPlayback();
             }
+            _lastHorizontalPostion = horizontalInput;
             return;
         }
 
@@ -160,183 +155,50 @@ public class Player : MonoBehaviour
         }
 
         // where did we move?
-
         _lastPosition = transform.position;
-        if (horizontalInput < 0.0f)
+        UpdateMovementAnimation(horizontalInput);
+    }
+    
+    private void UpdateMovementAnimation(float hInput)
+    {
+        if (hInput < 0.0f)
         {
             // if left animation not running, start
             Logger.Log(Channel.AI, "Moving Left");
             // Stop any animation
             if (_isAnimLeft)
             {
-
+                // do nothing
             }
             else if (_isAnimRight)
             {
-
+                // Stop Right anim, start left anim
+                _anim.StopPlayback();
+                _anim.SetTrigger("Player_Turn_Left");
             }
             //_deathAnimation.SetTrigger("OnEnemyDeath"); // trigger the exposion animation
 
         }
-        else if (horizontalInput > 0.0f)
+        else if (hInput > 0.0f)
         {
             // if right animation not running, start
             Logger.Log(Channel.AI, "Moving Right");
             // Stop any animation
             if (_isAnimLeft)
             {
-
+                // stop left anim
+                // start right anim
+                // Stop Right anim, start left anim
+                _anim.StopPlayback();
+                _anim.SetTrigger("Player_Turn_Right");
             }
             else if (_isAnimRight)
             {
-
+                // do nothing
             }
             //_deathAnimation.SetTrigger("OnEnemyDeath"); // trigger the exposion animation
         }
-    }
+        _lastHorizontalPostion = hInput;
 
-    // Only called when within fire threshold
-    void FireLaser()
-    {
-        _canFire = Time.time + _fireRate;
-
-        if (_useTripleShot)
-        {
-            Instantiate(_laserPrefabTriple,
-                transform.position + new Vector3(0, _firePositionOffset, 0),
-                Quaternion.identity);
-        }
-        else
-        {
-            Instantiate(_laserPrefabSingle,
-                transform.position + new Vector3(0, _firePositionOffset, 0),
-                Quaternion.identity);
-        }
-    }
-
-    public void Damage()
-    {
-        if (_shieldCount > 1)
-        {
-            _shieldCount--;
-            return;
-        } else if(_shieldCount == 1)
-        {
-            // kill shield icon - no more shields
-            _shieldVisualizer.SetActive(false);
-            _shieldCount--;
-            return;
-        }
-
-        // Adjust our lives and update the UI
-        _lives--;
-        UpdateLifeIcons();
-    }
-
-    void UpdateLifeIcons() {
-        _uiManager.UpdateLives(_lives);
-
-        // Show Damage depending on lives left
-        if (_lives > 2)
-        {
-            _damageLeft.SetActive(false);
-            _damageRight.SetActive(false);
-        }
-        if (_lives == 2)
-        {
-            _damageLeft.SetActive(false);
-            _damageRight.SetActive(true);
-        }
-        if(_lives == 1)
-        {
-            _damageLeft.SetActive(true);
-            _damageRight.SetActive(true);
-        }
-
-        if(_lives < 1)
-        {
-            // Tell spawn manager to stop spawning
-            _spawnManager.PlayerKilled();
-
-            _deathAnimation.SetTrigger("OnEnemyDeath"); // trigger the exposion animation
-
-            // Destroy our object after animation runs
-            Destroy(this.gameObject, _deathSequenceLength);
-        }
-    }
-
-    // Update Functions
-    public void AddLife()
-    {
-        _lives++;
-        UpdateLifeIcons();
-    }
-
-    public void EnableTripleShot()
-    {
-        if (!_useTripleShot)
-        {
-            _useTripleShot = true;
-            _tripleShotExpiration = System.DateTime.Now;
-        }
-
-        _tripleShotExpiration = _tripleShotExpiration.Add(new System.TimeSpan(0, 0, 0, (int)_tripleshotBoostDuration));
-        if (_tripleShotExpiration > System.DateTime.Now + System.TimeSpan.FromSeconds(_maxBoostDuration))
-        {
-            // Max out at 55 seconds
-            _tripleShotExpiration = System.DateTime.Now + System.TimeSpan.FromSeconds(_maxBoostDuration);
-        }
-        
-        _uiManager.TripleShot(_tripleShotExpiration);
-        //Logger.Log(Channel.Laser, "Extending triple shot to " + _tripleShotExpiration);
-    }
-
-    public void SpeedUp()
-    {
-        if (!_speedMode)
-        {
-            _speedMode = true;
-            _speedBoostExpiration = System.DateTime.Now;
-        }
-
-        _speedBoostExpiration = _speedBoostExpiration.Add(new System.TimeSpan(0, 0, 0, (int)_speedBoostDuration));
-        if(_speedBoostExpiration > System.DateTime.Now+System.TimeSpan.FromSeconds(_maxBoostDuration))
-        {
-            // Max out at 55 seconds
-            _speedBoostExpiration = System.DateTime.Now + System.TimeSpan.FromSeconds(_maxBoostDuration);
-        }
-        _uiManager.SpeedBoost(_speedBoostExpiration);
-        //Logger.Log(Channel.Player, "Extending speed boost to " + _speedBoostExpiration);
-        _movementSpeed = _boostSpeed;
-    }
-
-    public void ShieldUp()
-    {
-        if (_shieldCount < _maxShields)  // max shields
-        {
-            _shieldCount++;
-        }
-        //Logger.Log(Channel.Player, "Shield Up!!");
-        _shieldVisualizer.SetActive(true);
-        _uiManager.Shields(_shieldCount);
-    }
-
-    public void AddScore(int iVal)
-    {
-        //Logger.Log(Channel.Player, "Taking score from " + _score + " to " + iVal);
-        _score += iVal;
-        _uiManager.UpdateScore(_score);
-    }
-
-    public void StartWave(int iVal)
-    {
-        _score += iVal;
-        _uiManager.UpdateScore(_score);
-
-        if (!_spawnManager.IsSpawning())
-        {
-            Logger.Log(Channel.Player, "Player::StartWave");
-            _spawnManager.StartSpawning();
-        }
     }
 }
