@@ -52,7 +52,7 @@ MonoBehaviour:
   _killPoints: 10
   _laserPrefabSingle: {fileID: 3565143397535280443, guid: 9e42c6afa0a4e4c438dc8ac9762cc3f7,
     type: 3}
-  _firePositionOffset: 8
+  _canFire: -1
 --- !u!212 &548613356092775832
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -90,7 +90,7 @@ SpriteRenderer:
   m_SortingLayerID: 323725211
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3154912113cbb4a498df6f571c74e18c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5939592cd9b9f4335a4ee907fa989be4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

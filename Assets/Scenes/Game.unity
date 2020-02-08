@@ -1248,7 +1248,7 @@ GameObject:
   - component: {fileID: 867075347}
   - component: {fileID: 867075348}
   m_Layer: 0
-  m_Name: Player Turn Left0000
+  m_Name: Base Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1650,7 +1650,7 @@ PrefabInstance:
     - target: {fileID: 7789442057875521217, guid: 39e628a0f357844af84d2aa5caa873bf,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7789442057875521217, guid: 39e628a0f357844af84d2aa5caa873bf,
         type: 3}
@@ -1692,6 +1692,7 @@ GameObject:
   - component: {fileID: 1285001762}
   - component: {fileID: 1285001760}
   - component: {fileID: 1285001763}
+  - component: {fileID: 1285001761}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1714,6 +1715,8 @@ MonoBehaviour:
   _movementSpeed: 4
   _defaultMovementSpeed: 4
   _boostSpeed: 10
+  _damageLeft: {fileID: 1002317732}
+  _damageRight: {fileID: 1282853390}
   _laserPrefabSingle: {fileID: 7813508608774870523, guid: 573ac843059a14b30846090f6be81320,
     type: 3}
   _laserPrefabTriple: {fileID: 8417956342755865627, guid: 87af5bbdb7a59479e9fddfccaf9b0317,
@@ -1721,17 +1724,36 @@ MonoBehaviour:
   _defaultFireRate: 0.05
   _fireBoostRate: 0.16
   _lives: 3
+  _score: 0
+  _shieldCount: 0
+  _shieldVisualizer: {fileID: 1645699996}
   _useTripleShot: 0
   _speedMode: 0
-  _shieldCount: 0
   _minXRange: -6.6
   _maxXRange: 6.6
   _minYRange: -2.15
   _maxYRange: 8
-  _shieldVisualizer: {fileID: 1645699996}
-  _damageLeft: {fileID: 1002317732}
-  _damageRight: {fileID: 1282853390}
-  _score: 0
+  _swingLeftAnimation: {fileID: 0}
+  _swingRightAnimation: {fileID: 0}
+--- !u!95 &1285001761
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285001759}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 05e24fffefe104a0bab354d5c1033fca, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!4 &1285001762
 Transform:
   m_ObjectHideFlags: 0
@@ -1744,10 +1766,10 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 1002317733}
-  - {fileID: 1645699998}
+  - {fileID: 1282853391}
   - {fileID: 867075347}
   - {fileID: 296421410}
-  - {fileID: 1282853391}
+  - {fileID: 1645699998}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2074,7 +2096,7 @@ PrefabInstance:
     - target: {fileID: 2452153867394105848, guid: e77729b7e0a6d482f90bcf6d4adea506,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.066666655
+      value: -0.06666664
       objectReference: {fileID: 0}
     - target: {fileID: 2452153867394105848, guid: e77729b7e0a6d482f90bcf6d4adea506,
         type: 3}
@@ -2109,7 +2131,7 @@ PrefabInstance:
     - target: {fileID: 2452153867394105848, guid: e77729b7e0a6d482f90bcf6d4adea506,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2452153867394105848, guid: e77729b7e0a6d482f90bcf6d4adea506,
         type: 3}
@@ -2129,12 +2151,12 @@ PrefabInstance:
     - target: {fileID: 2452153867394105848, guid: e77729b7e0a6d482f90bcf6d4adea506,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 1.5000001
       objectReference: {fileID: 0}
     - target: {fileID: 2452153867394105848, guid: e77729b7e0a6d482f90bcf6d4adea506,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
+      value: 1.5000001
       objectReference: {fileID: 0}
     - target: {fileID: 2452153867394105848, guid: e77729b7e0a6d482f90bcf6d4adea506,
         type: 3}

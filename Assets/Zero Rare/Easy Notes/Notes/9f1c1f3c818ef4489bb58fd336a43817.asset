@@ -18,7 +18,7 @@ MonoBehaviour:
   note: "UI Manager contains a Game Manager Object\nSpawnManager spawns Enemies and
     Asteroids\n\x03\x03\nPlayer has access to UI Manager and Spawn Manager\n-- Tells
     SM to start and stop spawning\n-- Tells UI Manager when number of lives change
-    and what the score should be\n"
+    and what the score should be\n\n\nNeed Copyright Header for all Files"
   tags: 
   color: {r: 1, g: 1, b: 1, a: 1}
   show: 1

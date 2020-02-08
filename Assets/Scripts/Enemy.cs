@@ -24,10 +24,13 @@ public class Enemy : MonoBehaviour
     private float _nextFireMin = 3.0f, _nextFireMax = 5.0f;
 
     private float _deathSequenceLength = 2.5f;
+    private System.DateTime _startTime;
 
+    // --Old School
     // Start is called before the first frame update
     void Start()
     {
+        _startTime = System.DateTime.Now;
         _canFire = Time.time + Random.Range(_nextFireMin, _nextFireMax);
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
@@ -53,7 +56,6 @@ public class Enemy : MonoBehaviour
             }
             _canFire = Time.time + Random.Range(_nextFireMin, _nextFireMax);
         }
-
     }
 
     void CalculateMovement()

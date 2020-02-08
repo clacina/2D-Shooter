@@ -15,16 +15,18 @@ MonoBehaviour:
   id: -1
   newId: 9725065e3e1ba46eb887647f75770b05
   order: 1
-  note: "Extras (To Do):\n* Spawn asteroids\n    * Different speeds / random x path\n
-    \   * Different score value from enemys\n    * Change size dynamically and have
-    higher value base on size.\x03\x03\x03\n    * Out of bounds behavour?  Die or
+  note: "Extras (To Do):\n* Spawn asteroids\n    xx Different speeds / random x path\n
+    \   xx ifferent score value from enemys\n    xx Change size dynamically and have
+    higher value base on size.\x03\x03\x03\n    xx Out of bounds behavour?  Die or
     wrap?\x03    \n    * Spawn more frequently over time\n\nxx Fix bug with multiple
     ramp ups\n    * While in triple shot, get another triple shot\n        * Should
     extend original triple shot, instead cancels it\n\n* Use left and right player
-    animation\n\n* Side menu\n    * x shields\n    * x laser\n    * x speed\n* Add
-    an is dying mode for the enemies - so they don\u2019t stop so abruptly.\n\n* Cheat
-    Codes\nxx Tripple Shot\nxx Shield\nxx Speed\nxx Add Enemy\nxx Add Life\n\nxx Add
-    Asteroid\x03\n* Add running clock to match debug output\n"
+    animation\n\nxx Side menu\n    * x shields\n    * x laser\n    * x speed\n\n*
+    Add an is dying mode for the enemies - so they don\u2019t stop so abruptly.\n\n*
+    Cheat Codes\nxx Tripple Shot\nxx Shield\nxx Speed\nxx Add Enemy\nxx Add Life\nxx
+    Add Asteroid\x03\n\n* Add running clock to match debug output\n\x03* Spice up
+    fonts\x03\x03\n\n* Allow for More lives in UI - dynamically split sprite and replicate.\x03\n--Learning!\x03\x03\n*
+    Help text on Menu Scene"
   tags: 
   color: {r: 1, g: 1, b: 1, a: 1}
   show: 1

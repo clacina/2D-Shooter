@@ -5,43 +5,63 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    // Player movement speed and speed boost ramp up
     [SerializeField]
     private float _movementSpeed = 4f, _defaultMovementSpeed=4f, _boostSpeed=10f;
 
+    // Player Damage Animations
+    [SerializeField]
+    private GameObject _damageLeft, _damageRight;
+
+    // Lasers Prefabs
     [SerializeField]
     private GameObject _laserPrefabSingle, _laserPrefabTriple;
+    private float _firePositionOffset = 0.8f;
 
+    // Rate of Fire Control
     [SerializeField]
     private float _defaultFireRate=0.05f, _fireBoostRate=0.16f;
     private float _fireRate;
     private float _canFire=0.0f;
-    private float _firePositionOffset=0.8f;
 
+    // Lives and Score
     [SerializeField]
-    private int _lives = 3;
-    private const int _maxShields = 10;
-    private const float _maxBoostDuration = 55f;
+    private int _lives = 3, _score;
 
-    [SerializeField]
-    private bool _useTripleShot=false, _speedMode=false;
-    private float _speedBoostDuration=5f, _shieldDuration=28f, _tripleshotBoostDuration=15f;
-    private System.DateTime _tripleShotExpiration, _speedBoostExpiration;
-
+    // Shield Stuff
     [SerializeField]
     private int _shieldCount = 0;
+    private const int _maxShields = 10;
+    [SerializeField]
+    private GameObject _shieldVisualizer;
 
+    // Ramp Ups
+    [SerializeField]
+    private bool _useTripleShot=false, _speedMode=false;
+    private float _speedBoostDuration=5f, _tripleshotBoostDuration=15f;
+    private System.DateTime _tripleShotExpiration, _speedBoostExpiration;
+    private const float _maxBoostDuration = 55f;
+
+    // Screen Locations
     [SerializeField]
     private float _minXRange=-7.46f, _maxXRange=6.6f, _minYRange=-1.75f, _maxYRange=2f;
-    
-    [SerializeField]
-    private GameObject _shieldVisualizer, _damageLeft, _damageRight;
 
+    // High Level Manager Objects
     private UI_Manager _uiManager;
-
     private SpawnManager _spawnManager;
 
+    // Left / Right movement animation
     [SerializeField]
-    private int _score;
+    private GameObject _swingLeftAnimation, _swingRightAnimation;
+    private Animator _anim;
+    private int _lastMovement=0;  // -1 (left), 0, 1 (right)
+    private Vector3 _lastPosition;
+    private bool _isAnimLeft=false, _isAnimRight = false;
+
+
+    private Animator _deathAnimation;
+    private float _deathSequenceLength = 2.5f;
+
 
     void Start()
     {
@@ -62,6 +82,14 @@ public class Player : MonoBehaviour
         // Get access to the game manager
         _uiManager = GameObject.Find("UI_Manager").GetComponent<UI_Manager>();
         Debug.Assert(_uiManager, "Player cant find UI Manager");
+
+        _anim = gameObject.GetComponent<Animator>();
+        Debug.Assert(_anim, "Player cant find animation manaager");
+
+        _deathAnimation = GetComponent<Animator>();
+
+        _lastPosition = transform.position;
+        _lastMovement = 0;
     }
 
     void Update()
@@ -98,6 +126,20 @@ public class Player : MonoBehaviour
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
+        if(horizontalInput == 0.0f && verticalInput == 0.0f)
+        {
+            // Stop any animation
+            if(_isAnimLeft)
+            {
+
+            } else if(_isAnimRight)
+            {
+
+            }
+            return;
+        }
+
+        //Logger.Log(Channel.AI, "Horizontal input: " + horizontalInput);
 
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
 
@@ -115,6 +157,41 @@ public class Player : MonoBehaviour
         else if (transform.position.x < _minXRange)
         {
             transform.position = new Vector3(_maxXRange, transform.position.y, 0);
+        }
+
+        // where did we move?
+
+        _lastPosition = transform.position;
+        if (horizontalInput < 0.0f)
+        {
+            // if left animation not running, start
+            Logger.Log(Channel.AI, "Moving Left");
+            // Stop any animation
+            if (_isAnimLeft)
+            {
+
+            }
+            else if (_isAnimRight)
+            {
+
+            }
+            //_deathAnimation.SetTrigger("OnEnemyDeath"); // trigger the exposion animation
+
+        }
+        else if (horizontalInput > 0.0f)
+        {
+            // if right animation not running, start
+            Logger.Log(Channel.AI, "Moving Right");
+            // Stop any animation
+            if (_isAnimLeft)
+            {
+
+            }
+            else if (_isAnimRight)
+            {
+
+            }
+            //_deathAnimation.SetTrigger("OnEnemyDeath"); // trigger the exposion animation
         }
     }
 
@@ -181,8 +258,10 @@ public class Player : MonoBehaviour
             // Tell spawn manager to stop spawning
             _spawnManager.PlayerKilled();
 
-            // Destroy our object
-            Destroy(this.gameObject);
+            _deathAnimation.SetTrigger("OnEnemyDeath"); // trigger the exposion animation
+
+            // Destroy our object after animation runs
+            Destroy(this.gameObject, _deathSequenceLength);
         }
     }
 
