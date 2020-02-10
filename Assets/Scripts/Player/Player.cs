@@ -128,7 +128,11 @@ public partial class Player : MonoBehaviour
             // Stop any animation
             if(_isAnimLeft || _isAnimRight)
             {
-                _anim.StopPlayback();
+                Logger.Log(Channel.AI, "Stop Movement");
+                _anim.SetBool("MovingRight", false);
+                _anim.SetBool("MovingLeft", false);
+                _isAnimLeft = false;
+                _isAnimRight = false;
             }
             _lastHorizontalPostion = horizontalInput;
             return;
@@ -161,42 +165,35 @@ public partial class Player : MonoBehaviour
     
     private void UpdateMovementAnimation(float hInput)
     {
-        if (hInput < 0.0f)
+        if (hInput < 0.0f)  // Input was leftward movement
         {
-            // if left animation not running, start
-            Logger.Log(Channel.AI, "Moving Left");
-            // Stop any animation
-            if (_isAnimLeft)
+            if (_isAnimLeft)  // we're already moving left, so don't change animation
             {
                 // do nothing
             }
-            else if (_isAnimRight)
+            else 
             {
-                // Stop Right anim, start left anim
-                _anim.StopPlayback();
-                _anim.SetTrigger("Player_Turn_Left");
+                Logger.Log(Channel.AI, "Moving Left");
+                _anim.SetBool("MovingRight", false);
+                _anim.SetBool("MovingLeft", true);
             }
-            //_deathAnimation.SetTrigger("OnEnemyDeath"); // trigger the exposion animation
-
+            _isAnimLeft = true;
+            _isAnimRight = false;
         }
-        else if (hInput > 0.0f)
+        else if (hInput > 0.0f)  // Input was rightward movement
         {
-            // if right animation not running, start
-            Logger.Log(Channel.AI, "Moving Right");
-            // Stop any animation
-            if (_isAnimLeft)
+            if (_isAnimRight)  
             {
-                // stop left anim
-                // start right anim
-                // Stop Right anim, start left anim
-                _anim.StopPlayback();
-                _anim.SetTrigger("Player_Turn_Right");
+                Logger.Log(Channel.AI, "Moving Right");
+                _anim.SetBool("MovingLeft", false);
+                _anim.SetBool("MovingRight", true);
             }
-            else if (_isAnimRight)
+            else
             {
                 // do nothing
             }
-            //_deathAnimation.SetTrigger("OnEnemyDeath"); // trigger the exposion animation
+            _isAnimLeft = false;
+            _isAnimRight = true;
         }
         _lastHorizontalPostion = hInput;
 
