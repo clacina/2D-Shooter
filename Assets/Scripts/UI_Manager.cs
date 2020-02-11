@@ -17,7 +17,7 @@ public class UI_Manager : MonoBehaviour
     private Sprite[] _lifesSprites;
 
     [SerializeField]
-    private Text _gameOverText, _restartText, _shieldsText, _tripleText, _speedText;
+    private Text _gameOverText, _restartText, _shieldsText, _tripleText, _speedText, _gameStartText;
     private bool _gameOverFlash;
     private GameManager _gameManager;
 
@@ -27,19 +27,37 @@ public class UI_Manager : MonoBehaviour
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
         Debug.Assert(_gameManager, "Game manager is null");
 
+        _gameOverText.gameObject.SetActive(false);
+        _restartText.gameObject.SetActive(false);
+        _gameStartText.gameObject.SetActive(true);
+
+        _scoreText.gameObject.SetActive(false);
+        _shieldsText.gameObject.SetActive(false);
+        _tripleText.gameObject.SetActive(false);
+        _speedText.gameObject.SetActive(false);
+
+
+        //Logger.Log(Channel.UI, "Life Sprite: " + _lifesSprites.Length);
+        if (_lifesSprites.Length > 0)
+        {
+            UpdateLives(_lifesSprites.Length-1);
+        }
+    }
+
+    public void StartPlaying()
+    {
+        Logger.Log(Channel.AI, "UM - StartPlaying");
+        _gameStartText.gameObject.SetActive(false);
+
         _scoreText.text = "Score: 0";
         _shieldsText.text = "0 Shields";
         _tripleText.text = "";
         _speedText.text = "";
 
-        _gameOverText.gameObject.SetActive(false);
-        _restartText.gameObject.SetActive(false);
-
-        //Logger.Log(Channel.UI, "Life Sprite: " + _lifesSprites.Length);
-        if(_lifesSprites.Length > 0)
-        {
-            UpdateLives(_lifesSprites.Length-1);
-        }
+        _scoreText.gameObject.SetActive(true);
+        _shieldsText.gameObject.SetActive(true);
+        _tripleText.gameObject.SetActive(true);
+        _speedText.gameObject.SetActive(true);
     }
 
     public void UpdateScore(int score)

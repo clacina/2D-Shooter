@@ -72,6 +72,10 @@ public class SpawnManager : MonoBehaviour
             StartCoroutine(SpawnEnemy());
             StartCoroutine(SpawnPowerUp());
             StartCoroutine(SpawnAsteroid());
+            UI_Manager ui_Manager = GameObject.Find("UI_Manager").GetComponent<UI_Manager>();
+            Debug.Assert(ui_Manager, "Unable to connect to UI Manager");
+            ui_Manager.StartPlaying();
+
         }
     }
 

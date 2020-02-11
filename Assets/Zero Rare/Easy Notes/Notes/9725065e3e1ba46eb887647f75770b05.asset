@@ -15,7 +15,11 @@ MonoBehaviour:
   id: -1
   newId: 9725065e3e1ba46eb887647f75770b05
   order: 1
-  note: "Extras (To Do):\n* Spawn asteroids\n    xx Different speeds / random x path\n
+  note: "Extras (To Do):\n\n* New Fonts\n  -- Main Screen (Button)\n  -- Game Screen\n\n*
+    Game Screen Start Text\n  -- Use Space to Fire... instructions\n\n* 'h' key to
+    show instructions\n\n* Stagger spacing of initial elements\n -- enemy, asteroid
+    and powerup all fall as soon as we destroy the asteroid.\n\n* Add Mute key\n*
+    add mute icon\n\n* Spawn asteroids\n    xx Different speeds / random x path\n
     \   xx ifferent score value from enemys\n    xx Change size dynamically and have
     higher value base on size.\x03\x03\x03\n    xx Out of bounds behavour?  Die or
     wrap?\x03    \n    * Spawn more frequently over time\n\nxx Fix bug with multiple
