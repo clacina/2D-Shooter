@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Generic class to handle all power up behaviors
 public class PowerUp : MonoBehaviour
 {
     [SerializeField]
@@ -12,11 +13,6 @@ public class PowerUp : MonoBehaviour
     private int _powerupID;
     [SerializeField]
     private AudioClip _clip;
-
-    private void Start()
-    {
-        
-    }
 
     void Update()
     {
@@ -34,13 +30,12 @@ public class PowerUp : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Hit: " + other.transform.name);
-
         if (other.transform.tag == "Player")
         {
             // Boost Player
             Player player = other.transform.GetComponent<Player>();
 
+            // Play our audio clip
             AudioSource.PlayClipAtPoint(_clip, transform.position);
 
             if (player != null)
@@ -64,5 +59,4 @@ public class PowerUp : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
 }

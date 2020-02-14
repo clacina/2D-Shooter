@@ -99,7 +99,6 @@ public partial class Player : MonoBehaviour
         }
 
         _uiManager.TripleShot(_tripleShotExpiration);
-        //Logger.Log(Channel.Laser, "Extending triple shot to " + _tripleShotExpiration);
     }
 
     public void SpeedUp()
@@ -117,7 +116,6 @@ public partial class Player : MonoBehaviour
             _speedBoostExpiration = System.DateTime.Now + System.TimeSpan.FromSeconds(_maxBoostDuration);
         }
         _uiManager.SpeedBoost(_speedBoostExpiration);
-        //Logger.Log(Channel.Player, "Extending speed boost to " + _speedBoostExpiration);
         _movementSpeed = _boostSpeed;
     }
 
@@ -127,14 +125,12 @@ public partial class Player : MonoBehaviour
         {
             _shieldCount++;
         }
-        //Logger.Log(Channel.Player, "Shield Up!!");
         _shieldVisualizer.SetActive(true);
         _uiManager.Shields(_shieldCount);
     }
 
     public void AddScore(int iVal)
     {
-        //Logger.Log(Channel.Player, "Taking score from " + _score + " to " + iVal);
         _score += iVal;
         _uiManager.UpdateScore(_score);
     }

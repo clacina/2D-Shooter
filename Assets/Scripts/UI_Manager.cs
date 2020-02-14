@@ -4,12 +4,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
 public class UI_Manager : MonoBehaviour
 {
     [SerializeField]
     private Text _scoreText;
+
     [SerializeField]
     private int _score=0;
+
     [SerializeField]
     private Image _LifeImg;
 
@@ -18,14 +22,19 @@ public class UI_Manager : MonoBehaviour
 
     [SerializeField]
     private Text _gameOverText, _restartText, _shieldsText, _tripleText, _speedText, _gameStartText;
-    private bool _gameOverFlash;
+
+    [SerializeField]
+    private TextMeshProUGUI _clockText;
+
     private GameManager _gameManager;
+    private bool _gameOverFlash = true;
 
 
     void Start()
     {
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
         Debug.Assert(_gameManager, "Game manager is null");
+
 
         _gameOverText.gameObject.SetActive(false);
         _restartText.gameObject.SetActive(false);
@@ -35,25 +44,39 @@ public class UI_Manager : MonoBehaviour
         _shieldsText.gameObject.SetActive(false);
         _tripleText.gameObject.SetActive(false);
         _speedText.gameObject.SetActive(false);
+        _clockText.gameObject.SetActive(false);
 
-
-        //Logger.Log(Channel.UI, "Life Sprite: " + _lifesSprites.Length);
         if (_lifesSprites.Length > 0)
         {
             UpdateLives(_lifesSprites.Length-1);
         }
     }
 
+    private void Update()
+    {
+        if(!_clockText)
+        {
+            return;
+        }
+        _clockText.text = DateTime.Now.ToString("HH:mm:ss");
+    }
+
     public void StartPlaying()
     {
         Logger.Log(Channel.AI, "UM - StartPlaying");
+
+        // Hide startup text
         _gameStartText.gameObject.SetActive(false);
 
+        // Format our UI elements
         _scoreText.text = "Score: 0";
         _shieldsText.text = "0 Shields";
         _tripleText.text = "";
         _speedText.text = "";
+        _clockText.text = DateTime.Now.ToString("HH:mm:ss");
 
+        // Enable our UI elements
+        _clockText.gameObject.SetActive(true);
         _scoreText.gameObject.SetActive(true);
         _shieldsText.gameObject.SetActive(true);
         _tripleText.gameObject.SetActive(true);
