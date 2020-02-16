@@ -15,8 +15,8 @@ MonoBehaviour:
   id: -1
   newId: 9725065e3e1ba46eb887647f75770b05
   order: 1
-  note: "Extras (To Do):\n\nxx New Fonts\n  -- Main Screen (Button)\n  -- Game Screen\n\n*
-    Game Screen Start Text\n  -- Use Space to Fire... instructions\n\n* 'h' key to
+  note: "Extras (To Do):\n\nxx New Fonts\n  -- Main Screen (Button)\n  -- Game Screen\n\nxx
+    Game Screen Start Text\n  -- Use Space to Fire... instructions\n\nxx 'h' key to
     show instructions\n\n* Stagger spacing of initial elements\n -- enemy, asteroid
     and powerup all fall as soon as we destroy the asteroid.\n\n* Add Mute key\n*
     add mute icon\n\n* Spawn asteroids\n    xx Different speeds / random x path\n
@@ -28,8 +28,8 @@ MonoBehaviour:
     animation\n\nxx Side menu\n    * x shields\n    * x laser\n    * x speed\n\n*
     Add an is dying mode for the enemies - so they don\u2019t stop so abruptly.\n\n*
     Cheat Codes\nxx Tripple Shot\nxx Shield\nxx Speed\nxx Add Enemy\nxx Add Life\nxx
-    Add Asteroid\x03\n\n* Add running clock to match debug output\n\x03* Spice up
-    fonts\x03\x03\n\n* Allow for More lives in UI - dynamically split sprite and replicate.\x03\n--Learning!\x03\x03\n*
+    Add Asteroid\x03\n\nxx Add running clock to match debug output\n\x03xx Spice up
+    fonts\x03\x03\n\n* Allow for More lives in UI - dynamically split sprite and replicate.\x03\x03\x03\nxx
     Help text on Menu Scene"
   tags: 
   color: {r: 1, g: 1, b: 1, a: 1}

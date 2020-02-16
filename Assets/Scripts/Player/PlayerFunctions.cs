@@ -28,6 +28,7 @@ public partial class Player : MonoBehaviour
         if (_shieldCount > 1)
         {
             _shieldCount--;
+            _uiManager.Shields(_shieldCount);
             return;
         }
         else if (_shieldCount == 1)
@@ -35,6 +36,7 @@ public partial class Player : MonoBehaviour
             // kill shield icon - no more shields
             _shieldVisualizer.SetActive(false);
             _shieldCount--;
+            _uiManager.Shields(_shieldCount);
             return;
         }
 

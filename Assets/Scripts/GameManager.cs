@@ -21,9 +21,13 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private bool _isGameOver;
+    private bool _isPaused=false, _isMuted=false;
 
     private Player _player;
     private SpawnManager _spawnManager;
+
+    [SerializeField]
+    private GameObject _helpText;
 
     private void Start()
     {
@@ -32,6 +36,8 @@ public class GameManager : MonoBehaviour
 
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         Debug.Assert(_spawnManager, "GameManager cannot get handle to Spawn Manager");
+
+        _helpText.gameObject.SetActive(false);
     }
 
     void OnGUI()
@@ -65,6 +71,31 @@ public class GameManager : MonoBehaviour
                     if (_isGameOver)
                     {
                         RestartGame();
+                    }
+                    break;
+                case KeyCode.H:         // Help
+                    if(!_isPaused)
+                    {
+                        Time.timeScale = 0;
+                        _isPaused = true;
+                        _helpText.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        _helpText.gameObject.SetActive(false);
+                        Time.timeScale = 1;
+                        _isPaused = false;
+                    }
+                    break;
+                case KeyCode.M:         // Mute
+                    if(!_isMuted)
+                    {
+                        AudioListener.volume = 0f;
+                        _isMuted = true;
+                    } else
+                    {
+                        AudioListener.volume = 1f;
+                        _isMuted = false;
                     }
                     break;
                 case KeyCode.Escape:    // Exit
